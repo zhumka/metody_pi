@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная - Блог</title>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <script src="{% static 'js/index.js' %}" defer></script>
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo">
+                <h1><a href="{% url 'blog:index' %}">Мой Блог</a></h1>
+            </div>
+            <div class="user-menu">
+                {% if user.is_authenticated %}
+                    <span>Привет, {{ user.username }}!</span>
+                    <a class="button" href="{% url 'blog:profile' %}">Профиль</a>
+                    <a class="button" href="{% url 'blog:logout' %}">Выйти</a>
+                {% else %}
+                    <a class="button" href="{% url 'blog:login' %}">Вход</a>
+                    <a class="button" href="{% url 'blog:signup' %}">Регистрация</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+    <nav class="category-nav">
+        {% if categories %}
+            <ul>
+                {% for category in categories %}
+                    <li>
+                        <a href="{% url 'blog:category_detail' category.slug %}" class="category-button">{{ category.name }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Категории отсутствуют.</p>
+        {% endif %}
+    </nav>
+    <main class="content">
+        <section class="posts">
+            <h2>Последние посты</h2>
+            {% if posts %}
+                <div class="post-list">
+                    {% for post in posts %}
+                        <div class="post-card">
+                            <h3><a href="{% url 'blog:post_detail' post.id %}">{{ post.title }}</a></h3>
+                            <p><strong>Автор:</strong> {{ post.author.username }}</p>
+                            <p><strong>Категория:</strong> {{ post.category.name }}</p>
+                            <p><strong>Просмотры:</strong> {{ post.views }} | <strong>Комментарии:</strong> {{ post.comments.count }}</p>
+                            <p>{{ post.content|truncatewords:20 }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>Нет опубликованных постов.</p>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>

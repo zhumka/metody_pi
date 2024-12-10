@@ -1,0 +1,32 @@
+<!-- app/templates/app/user_profile.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль {{ user.username }}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Профиль {{ user.username }}</h1>
+    </header>
+    <main>
+        <p>Имя: {{ user.username }}</p>
+        <p>Биография: {{ user.profile.bio }}</p>
+        {% if user.profile.profile_image %}
+            <img src="{{ user.profile.profile_image.url }}" alt="Профиль {{ user.username }}">
+        {% endif %}
+        <p>Вебсайт: <a href="{{ user.profile.website }}">{{ user.profile.website }}</a></p>
+        <p>Местоположение: {{ user.profile.location }}</p>
+        <p>Дата рождения: {{ user.profile.birth_date }}</p>
+        <h3>Посты:</h3>
+        <ul>
+            {% for post in user.posts.all %}
+                <li><a href="{% url 'blog:post_detail' post.id %}">{{ post.title }}</a></li>
+            {% endfor %}
+        </ul>
+    </main>
+</body>
+</html>

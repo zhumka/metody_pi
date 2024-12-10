@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль пользователя {{ user.username }}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px;
+        }
+        .nav-links {
+            list-style-type: none;
+            padding: 0;
+        }
+        .nav-links li {
+            display: inline;
+            margin: 0 15px;
+        }
+        .nav-links a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .profile-section {
+            flex: 2;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-right: 20px;
+        }
+        .profile-section h2 {
+            font-size: 22px;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+        .profile-section ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .profile-section li {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .profile-section a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .create-post-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            color: white;
+            background-color: #28a745;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .create-post-btn:hover {
+            background-color: #218838;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f1f1f1;
+            color: #555;
+            margin-top: 40px;
+        }
+        .footer p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Профиль пользователя {{ user.username }}</h1>
+    </header>
+
+    <div class="container">
+        <div class="profile-section">
+            <h2>Мои посты</h2>
+            <a href="{% url 'blog:post_create' %}" class="create-post-btn">Создать новый пост</a>
+            {% if user_posts %}
+                <ul>
+                    {% for post in user_posts %}
+                        <li>
+                            <h4><a href="{% url 'blog:post_detail' post.id %}">{{ post.title }}</a></h4>
+                            <p>Дата создания: {{ post.created_at }}</p>
+                            <p>Просмотры: {{ post.views }} | Комментарии: {{ post.comments.count }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>У вас нет постов.</p>
+            {% endif %}
+        </div>
+
+        <div class="profile-section">
+            <h2>Мои комментарии</h2>
+            {% if user_comments %}
+                <ul>
+                    {% for comment in user_comments %}
+                        <li>
+                            <p>Комментарий к посту: <strong><a href="{% url 'blog:post_detail' comment.post.id %}">{{ comment.post.title }}</a></strong></p>
+                            <p>{{ comment.content }}</p>
+                            <p>Дата комментария: {{ comment.created_at }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Вы не оставляли комментариев.</p>
+            {% endif %}
+        </div>
+    </div>
+    <a href="{% url 'blog:index' %}" class="back-link">← Назад на главную</a>
+    <footer class="footer">
+        <p>&copy; 2024 Мой блог. Все права защищены.</p>
+    </footer>
+</body>
+</html>

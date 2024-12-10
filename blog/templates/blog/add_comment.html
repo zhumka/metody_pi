@@ -1,0 +1,7 @@
+<h3>Добавить комментарий</h3>
+<form method="post" class="comment-form">
+    {% csrf_token %}
+    {{ form.content.label_tag }}
+    {{ form.content }}
+    <button type="submit">Отправить</button>
+</form>
